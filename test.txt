@@ -6,3 +6,6 @@ Creating a new branch is quick.
 
 this is added on branch
 
+系统列表：系统名称、调用次数、响应时间、关联关系
+监控范围：监控系统数、异常系统数等
+响应时间最慢排名：系统名称、响应时间
