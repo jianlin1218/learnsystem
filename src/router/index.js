@@ -30,61 +30,60 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
+
 export const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
-  
+
 
   {
-    path: '/roles',
+    path: '/manage',
     component: Layout,
-    children: [{
-      path: 'index',
-      name: 'roles',
-      component: () => import('@/views/roles/index'),
-      meta: { title: '角色列表', icon: 'user' }
-    }]
-  },
-  {
-    path: '/dept',
-    component: Layout,
-    children: [{
-      path: 'index',
-      name: 'department',
-      component: () => import('@/views/dept/index'),
-      meta: { title: '部门列表', icon: 'dashboard' }
-    }]
-  },
-  {
-    path: '/menu',
-    component: Layout,
-    children: [{
-      path: 'index',
-      name: 'menu',
-      component: () => import('@/views/menu/index'),
-      meta: { title: '菜单管理', icon: 'tree' }
-    }]
-  },
-
-  {
-    path: '/form',
-    component: Layout,
-    meta: { title: '二级菜单', icon: 'tree' },
+    meta: { title: '组织架构', icon: 'tree' },
     children: [
       {
-        path: 'index',
-        name: '表单',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        path: 'user',
+        name: 'user',
+        component: () => import('@/views/user/index'),
+        meta: { title: '用户管理', icon: 'user' }
       },
       {
-        path: '/login',
+        path: 'roles',
+        name: 'roles',
+        component: () => import('@/views/roles/index'),
+        meta: { title: '角色列表', icon: 'user' }
+      },
+      {
+        path: 'dept',
+        name: 'department',
+        component: () => import('@/views/dept/index'),
+        meta: { title: '部门列表', icon: 'dashboard' }
+      },
+      {
+        path: 'menu',
+        name: 'menu',
+        component: () => import('@/views/menu/index'),
+        meta: { title: '菜单管理', icon: 'tree' }
+      }
+
+    ]
+  },
+
+
+  {
+    path: '/',
+    component: Layout,
+    alwaysShow:true,
+    meta: { title: '表单', icon: 'form' },
+    children: [
+      {
+        path: '',
         name: 'Form',
-        component: () => import('@/views//login/index'),
-        meta: { title: '登录', icon: 'form' }
+        component: () => import('@/views/form/index'),
+        meta: { title: 'Form', icon: 'form' },
       }
     ]
   },
@@ -94,6 +93,18 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
+
+
+  // {
+  //   path: 'external-link',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
+  //       meta: { title: 'External Link', icon: 'link' }
+  //     }
+  //   ]
+  // },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

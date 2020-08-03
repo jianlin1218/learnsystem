@@ -30,12 +30,16 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { username, password } = userInfo
+    const { userCode , password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
+      login({ userCode: userCode.trim(), password: password }).then(response => {
         const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        commit('SET_TOKEN', data.loginToken)
+
+        // TODO 
+        // commit('SET_NAME', userCode)
+        // commit('SET_AVATAR', 'https://www.baidu.com/img/flexible/logo/pc/result@2.png')
+        setToken(data.loginToken)
         resolve()
       }).catch(error => {
         reject(error)
@@ -52,11 +56,12 @@ const actions = {
         if (!data) {
           reject('Verification failed, please Login again.')
         }
+        
+        // 查询到的用户信息
+        // const { name, avatar } = data
 
-        const { name, avatar } = data
-
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
+        // commit('SET_NAME', name)
+        // commit('SET_AVATAR', avatar)
         resolve(data)
       }).catch(error => {
         reject(error)

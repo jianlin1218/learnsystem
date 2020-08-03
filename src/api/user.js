@@ -2,25 +2,63 @@ import request from '@/utils/request'
 import qs from 'query-string'
 
 export function login(data) {
+  const params = qs.stringify(data);
   return request({
-    url: '/vue-admin-template/user/login',
-    method: 'post',
-    data
-  })
-}
-
-export function getInfo(token) {
-  return request({
-    url: '/vue-admin-template/user/info',
-    method: 'get',
-    params: { token }
+    url: `/v1/basic/login?${params}`,
+    method: 'post'
   })
 }
 
 export function logout() {
   return request({
-    url: '/vue-admin-template/user/logout',
+    url: '/gms/v1/basic/logout',
     method: 'post'
+  })
+}
+
+export function getInfo(token) {
+  return request({
+    url: '/v1/sys/users/getLoginUser',
+    method: 'get',
+    // params: { token }
+  })
+}
+
+
+//----------------用户------------------
+
+// 用户列表
+export function listUser(data) {
+  const params = qs.stringify(data);
+  return request({
+    url: '/gsm/v1/sys/users/listUsers?'+params,
+    method: 'get',
+  })
+}
+
+// 新增用户
+export function addUser(data) {
+  return request({
+    url: '/gsm/v1/sys/users/addUser',
+    method: 'post',
+    data
+  })
+}
+
+// 删除用户
+export function deleteUser(id) {
+  return request({
+    url: '/gsm/v1/sys/users/delete?id='+id,
+    method: 'get',
+  })
+}
+
+// 更新用户
+export function updateUser(data) {
+  return request({
+    url: '/gsm/v1/sys/users/managerUpdateInfo',
+    method: 'post',
+    data
   })
 }
 

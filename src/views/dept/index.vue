@@ -26,7 +26,7 @@
 
     <div class="buttons-container">
       <el-button icon="el-icon-plus" type="text" @click="handleCreate">新增部门</el-button>&nbsp;&nbsp;
-      <el-button type="text" icon="el-icon-delete" @click="handleBach('delete')">部门删除</el-button>
+      <!-- <el-button type="text" icon="el-icon-delete" @click="handleBach('delete')">部门删除</el-button> -->
     </div>
 
     <el-table
@@ -41,7 +41,7 @@
       <el-table-column prop="operateIp" label="操作Ip"></el-table-column>
       <el-table-column prop="createTime" label="创建时间"></el-table-column>
       <el-table-column prop="updateTime" label="更新时间"></el-table-column>
-      <el-table-column label="操作" align="center" min-width="120px" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="250" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button size="mini" @click="handleUpdate(row)">编辑</el-button>
           <el-button v-if="row.auditState!='unaudit'" size="mini" @click="handleShow(row)">查看详情</el-button>&nbsp;&nbsp;
@@ -52,7 +52,7 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    <el-dialog :close-on-click-modal='false' :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form
         ref="dataForm"
         :rules="rules"

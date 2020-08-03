@@ -4,22 +4,8 @@
     <sidebar class="sidebar-container" />
     <div class="main-container">
       <div :class="{'fixed-header':fixedHeader}">
-        <div class="headTitle">
-          智能系统！
-          <div class="user-info">
-            <div>
-              <i class="el-icon-user-solid circle-bg"> </i>
-              &nbsp;用户：max
-              &nbsp;&nbsp;&nbsp;&nbsp;
-            </div>
-            <div  @click="logout">
-              <i class="el-icon-switch-button circle-bg"> </i> 
-              &nbsp;退出
-            </div>
-          </div>
-        </div>
         <navbar />
-        <!-- <tags-view  /> -->
+        <tags-view  />
       </div>
       <el-card class="main-card">
         <app-main />
@@ -66,7 +52,7 @@ export default {
     },
     
     logout() {
-      console.log('退出');
+      console.log('�˳�');
       
       // await this.$store.dispatch('user/logout')
       // this.$router.push(`/login?redirect=${this.$route.fullPath}`)
@@ -120,19 +106,9 @@ export default {
     margin: 20px;
     padding: 10px;
     box-sizing: border-box;
-    background: $mainBg;
     border: none;
   }
 
-  .headTitle{
-    height: 80px;
-    line-height: 110px;
-    font-size: 40px;
-    font-weight: bolder;
-    color: white;
-    margin: 0 30px 0 20px;
-    position: relative;
-  }
   .user-info{
     position: absolute;
     right: 0;
@@ -148,6 +124,5 @@ export default {
     padding: 3px;
     border-radius: 50%;
     font-size: 12px;
-    color: $mainBg;
   }
 </style>

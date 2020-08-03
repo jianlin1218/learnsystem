@@ -4,47 +4,13 @@
     <el-card class="box-card">
       <div class="search-container">
         <div class="input-box">
-          <!-- <el-select
-            v-model="listQuery.targetType"
-            placeholder="角色类型"
-            clearable
-            style="width: 200px"
-            class="filter-item"
-          >
-            <el-option label="全部" value />
-            <el-option
-              v-for="item in exponentTypeOptions"
-              :key="item.key"
-              :label="item.value"
-              :value="item.key"
-            />
-          </el-select> -->
-
           <el-input
             v-model="listQuery.targetName"
-            placeholder="角色名称"
+            placeholder="用户名称"
             style="width: 200px;"
             class="filter-item"
             @keyup.enter.native="handleFilter"
           />
-
-
-          <!-- <el-select
-            v-model="listQuery.tagIds"
-            placeholder="角色标签"
-            multiple
-            filterable
-            clearable
-            class="filter-item"
-            style="width: 200px"
-          >
-            <el-option
-              v-for="item in calendarTypeOptions"
-              :key="item.key"
-              :label="item.display_name+'('+item.key+')'"
-              :value="item.key"
-            />
-          </el-select> -->
         </div>
         <div class="button-container">
           <el-button
@@ -59,7 +25,7 @@
     </el-card>
 
     <div class="buttons-container">
-      <el-button icon="el-icon-plus" type="text" @click="handleCreate">新增角色</el-button>&nbsp;&nbsp;
+      <el-button icon="el-icon-plus" type="text" @click="handleCreate">新增用户</el-button>&nbsp;&nbsp;
       <el-button type="text" icon="el-icon-delete" @click="handleBach('delete')">批量删除</el-button>
     </div>
 
@@ -73,34 +39,39 @@
       style="width: 100%;"
       @selection-change="handleSelectionChange"
     >
-      <!-- @sort-change="sortChange" -->
-      <!--  <el-table-column label="序号" prop="id" sortable="custom" align="center"  :class-name="getSortClass('id')">
-      <template slot-scope="{row}">
-        <span>{{ row.id }}</span>
-      </template>
+      <!-- <el-table-column
+        label="序号"
+        prop="id"
+        @sort-change="sortChange"
+        sortable="custom"
+        align="center"
+        
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.id }}</span>
+        </template>
       </el-table-column>-->
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column label="序号" prop="id" align="center"></el-table-column>
-      <el-table-column label="用户名" prop="roleName" align="center"></el-table-column>
-      <el-table-column label="描述" prop="roleDes" align="center"></el-table-column>
-      <el-table-column label="状态" prop="status" align="center"></el-table-column>
+      <el-table-column label="用户名" prop="userName" align="center"></el-table-column>
+      <el-table-column label="电话" prop="phone" align="center"></el-table-column>
+      <el-table-column label="邮箱" prop="email" align="center"></el-table-column>
+      <el-table-column label="部门" prop="deptId" align="center"></el-table-column>
+      <el-table-column label="状态" prop="status" align="center">
+        <template slot-scope='{row}'>
+          <el-switch off-value="0" on-value="1" v-model="row.status"></el-switch>
+        </template>
+      </el-table-column>
+      <el-table-column label="备注" prop="remark" align="center"></el-table-column>
       <el-table-column label="最后更改时间" prop="updateTime" align="center"></el-table-column>
-      <el-table-column label="创建时间" prop="careteTime" align="center"></el-table-column>
-     
+      <!-- <el-table-column label="创建时间" prop="careteTime" align="center"></el-table-column> -->
 
       <el-table-column label="操作" align="center" width="250" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button
-            size="mini"
-            @click="handleUpdate(row)"
-          >编辑</el-button>
-          
+          <el-button size="mini" @click="handleUpdate(row)">编辑</el-button>
+
           <el-button v-if="row.auditState!='unaudit'" size="mini" @click="handleShow(row)">查看详情</el-button>
-          <el-popconfirm
-            placement="top"
-            title="确认删除该角色？"
-            @onConfirm="handleDelete([row.id])"
-          >
+          <el-popconfirm placement="top" title="确认删除该用户？" @onConfirm="handleDelete([row.id])">
             <el-button slot="reference" size="mini" type="danger">删除</el-button>
           </el-popconfirm>
         </template>
@@ -115,7 +86,11 @@
       @pagination="fetchData"
     />
 
-    <el-dialog :close-on-click-modal='false' :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    <el-dialog
+      :close-on-click-modal="false"
+      :title="textMap[dialogStatus]"
+      :visible.sync="dialogFormVisible"
+    >
       <el-form
         ref="dataForm"
         :rules="rules"
@@ -123,43 +98,29 @@
         label-position="right"
         label-width="120px"
       >
-       
-        <el-form-item label="角色名称" prop="roleName">
-          <el-input
-            :disabled="dialogStatus == 'show'"
-            v-model="temp.roleName"
-            placeholder="角色名称"
-          />
+        <el-form-item label="用户名称" prop="userName">
+          <el-input :disabled="dialogStatus == 'show'" v-model="temp.userName" placeholder="用户名称" />
         </el-form-item>
-        
-        <el-form-item label="角色描述" prop="roleDes">
+        <el-form-item label="电话号码" prop="phone">
+          <el-input :disabled="dialogStatus == 'show'" v-model="temp.phone" placeholder="填写电话号码" />
+        </el-form-item>
+        <el-form-item label="邮箱地址" prop="email">
+          <el-input :disabled="dialogStatus == 'show'" v-model="temp.email" placeholder="填写邮箱地址" />
+        </el-form-item>
+
+        <el-form-item label="所属部门" prop="deptId">
+          <el-input :disabled="dialogStatus == 'show'" v-model="temp.deptId" placeholder="选择部门" />
+        </el-form-item>
+
+        <el-form-item label="用户描述" prop="userDes">
           <el-input
             :disabled="dialogStatus == 'show'"
             type="textarea"
             rows="3"
-            v-model="temp.roleDes"
-            placeholder="角色描述"
+            v-model="temp.userDes"
+            placeholder="用户描述"
           />
         </el-form-item>
-
-        <!-- <el-form-item label="角色标签" prop="title">
-          <el-select
-            :disabled="dialogStatus == 'show'"
-            v-model="temp.tag_ids"
-            placeholder="角色标签"
-            multiple
-            filterable
-            clearable
-            class="filter-item"
-          >
-            <el-option
-              v-for="item in calendarTypeOptions"
-              :key="item.key"
-              :label="item.display_name+'('+item.key+')'"
-              :value="item.key"
-            />
-          </el-select>
-        </el-form-item> -->
       </el-form>
 
       <div slot="footer" class="dialog-footer">
@@ -173,7 +134,7 @@
     </el-dialog>
 
     <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
-      <span v-if="optType == 'delete'">你将批量删除以下角色：</span>
+      <span v-if="optType == 'delete'">你将批量删除以下用户：</span>
       <span v-else>你将批量提交审批：</span>
       <p v-for="(item,index) in optList" :key="index">{{index+1}}.{{item}}</p>
       <span slot="footer" class="dialog-footer">
@@ -185,13 +146,20 @@
 </template>
 
 <script>
-import {
-  listRoles,
-  addRole,
-  updateRole,
-  deleteRole
-} from "@/api/user"
+import { listUser, addUser, updateUser, deleteUser } from "@/api/user";
 import Pagination from "@/components/Pagination";
+
+const TEMP = {
+  deptId: 0,
+  email: "",
+  id: 0,
+  password: "111",
+  phone: "",
+  remark: "",
+  status: 0,
+  userCode: "",
+  userName: "",
+};
 
 export default {
   name: "ComplexTable",
@@ -206,45 +174,42 @@ export default {
       listQuery: {
         pageNum: 1,
         pageSize: 20,
-        isUsePage:true,
+        isUsePage: true,
       },
       multipleSelection: [],
       temp: {
         // 添加/编辑 弹框内容
-        id: undefined,
-        roleDes:'',
-        roleName:'',
-        status:1,
+        ...TEMP,
       },
       dialogFormVisible: false,
       dialogStatus: "",
       textMap: {
-        update: "编辑角色",
-        create: "新增角色",
-        show: "查看角色"
+        update: "编辑用户",
+        create: "新增用户",
+        show: "查看用户",
       },
       rules: {
         targetType: [
-          { required: true, message: "请选择角色类型", trigger: "change" }
+          { required: true, message: "请选择用户类型", trigger: "change" },
         ],
         targetName: [
-          { required: true, message: "角色名称必填", trigger: "blur" }
+          { required: true, message: "用户名称必填", trigger: "blur" },
         ],
         targetCode: [
-          { required: true, message: "角色标识必填", trigger: "blur" }
+          { required: true, message: "用户标识必填", trigger: "blur" },
         ],
         // realTimeExponents:[{ required: true, message: '表达式必填', trigger: 'blur' }],
         targetExpression: [
-          { required: true, message: "表达式必填", trigger: "blur" }
+          { required: true, message: "表达式必填", trigger: "blur" },
         ],
         tag_ids: [
-          { required: true, message: "请选择角色标签", trigger: "change" }
-        ]
+          { required: true, message: "请选择用户标签", trigger: "change" },
+        ],
       },
       dialogVisible: false,
       ids: [], // 批量操作id
       optList: [], // 批量操作名称
-      optType: "" // 批量操作类型
+      optType: "", // 批量操作类型
     };
   },
   created() {
@@ -253,11 +218,11 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true;
-      listRoles(this.listQuery).then(response => {
+      listUser(this.listQuery).then((response) => {
         console.log(response);
 
-        const {data} = response;
-        
+        const { data } = response;
+
         this.list = data.records;
         this.total = data.total;
         this.listLoading = false;
@@ -268,18 +233,15 @@ export default {
       this.fetchData();
     },
 
-    /* sortChange(data) {
-      const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
+    sortChange(data) {
+      const { prop, order } = data;
+      if (prop === "id") {
+        this.sortByID(order);
       }
-    }, */
+    },
     resetTemp() {
       this.temp = {
-        id: undefined,
-        roleDes:'',
-        roleName:'',
-        status:1,
+        ...TEMP,
       };
     },
     handleCreate() {
@@ -292,17 +254,18 @@ export default {
     },
 
     createData() {
-      this.$refs["dataForm"].validate(valid => {
+      this.$refs["dataForm"].validate((valid) => {
         if (valid) {
-          this.temp.id = this.list.length + 1;
-          addRole(this.temp).then(() => {
+          this.temp.id = 0;
+          this.temp.userCode = "user" + Math.random().toFixed(3);
+          addUser(this.temp).then(() => {
             this.dialogFormVisible = false;
             this.fetchData();
             this.$notify({
               title: "提示",
-              message: "添加角色成功！",
+              message: "添加用户成功！",
               type: "success",
-              duration: 2000
+              duration: 2000,
             });
           });
         }
@@ -325,17 +288,17 @@ export default {
       });
     },
     updateData() {
-      this.$refs["dataForm"].validate(valid => {
+      this.$refs["dataForm"].validate((valid) => {
         if (valid) {
           let tempData = Object.assign({}, this.temp);
-          updateRole(tempData).then(() => {
+          updateUser(tempData).then(() => {
             this.dialogFormVisible = false;
             this.fetchData();
             this.$notify({
               title: "提示",
-              message: "修改角色成功！",
+              message: "修改用户成功！",
               type: "success",
-              duration: 2000
+              duration: 2000,
             });
           });
         }
@@ -343,13 +306,13 @@ export default {
     },
     handleDelete(ids) {
       console.log("删除：", ids);
-      deleteRole(ids).then(() => {
+      deleteUser(ids).then(() => {
         this.fetchData();
         this.$notify({
           title: "提示",
-          message: "删除角色成功！",
+          message: "删除用户成功！",
           type: "success",
-          duration: 2000
+          duration: 2000,
         });
       });
     },
@@ -363,7 +326,7 @@ export default {
             title: "提示",
             message: "提交审批成功！",
             type: "success",
-            duration: 2000
+            duration: 2000,
           });
         });
       }
@@ -371,13 +334,13 @@ export default {
 
     handleBach(type) {
       let names = [];
-      let ids = this.multipleSelection.map(item => {
+      let ids = this.multipleSelection.map((item) => {
         names.push(item.targetName);
         return item.id;
       });
 
       if (names.length == 0) {
-        this.$message.warning("请勾选需要操作的角色！");
+        this.$message.warning("请勾选需要操作的用户！");
         return;
       }
       this.optList = names;
@@ -404,8 +367,8 @@ export default {
 
     handleSelectionChange(val) {
       this.multipleSelection = val;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -419,15 +382,15 @@ export default {
   align-items: center;
 }
 
-.input-box{
+.input-box {
   flex: 1;
 }
 
-.input-box >div{
+.input-box > div {
   margin: 5px;
 }
 
-.button-container{
+.button-container {
   justify-items: stretch;
 }
 </style>

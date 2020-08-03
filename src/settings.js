@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '智能系统',
+  title: '智能反欺诈',
 
   /**
    * @type {boolean} true | false

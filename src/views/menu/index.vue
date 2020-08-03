@@ -26,7 +26,7 @@
 
     <div class="buttons-container">
       <el-button icon="el-icon-plus" type="text" @click="handleCreate">新增菜单</el-button>&nbsp;&nbsp;
-      <el-button type="text" icon="el-icon-delete" @click="handleBach('delete')">菜单删除</el-button>
+      <!-- <el-button type="text" icon="el-icon-delete" @click="handleBach('delete')">菜单删除</el-button> -->
     </div>
 
     <el-table
@@ -43,7 +43,7 @@
       <el-table-column prop="router" label="地址"></el-table-column>
       <el-table-column prop="seq" label="排序"></el-table-column>
       <el-table-column prop="status" label="状态"></el-table-column>
-      <el-table-column label="操作" align="center"  min-width="180px" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="250" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button size="mini" @click="handleUpdate(row)">编辑</el-button>
           <el-button v-if="row.auditState!='unaudit'" size="mini" @click="handleShow(row)">查看详情</el-button>&nbsp;&nbsp;
@@ -54,7 +54,7 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    <el-dialog :close-on-click-modal='false' :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form
         ref="dataForm"
         :rules="rules"
@@ -67,8 +67,8 @@
         </el-form-item>
         <el-form-item label="菜单类型" prop="menuType">
           <el-select v-model="temp.menuType">
-            <el-option label='菜单' value='menu'></el-option>
-            <el-option label='目录' value='leaf'></el-option>
+            <el-option label='菜单' value='0'></el-option>
+            <el-option label='目录' value='1'></el-option>
           </el-select>
         </el-form-item>
 
@@ -77,6 +77,7 @@
             filterable
             :disabled="dialogStatus == 'show'"
             v-model="temp.parentId"
+            :show-all-levels='false'
             :options="tableData"
             :props="{ checkStrictly: true,emitPath:'false',value:'id',label:'menuName' }"
             clearable
@@ -106,8 +107,19 @@
 </template>
 
 <script>
-// import { menuTree,addMenu,delMenu,updateMenu } from "@/api/menu";
-import { listDept, addDept, updateDept, deleteDept } from "@/api/user";
+import { menuTree,addMenu,delMenu,updateMenu } from "@/api/menu";
+const TEMP = {
+  // 添加/编辑 弹框内容
+  "id": undefined,
+  "access": 0,
+  "menuName": "",
+  "menuType": null,
+  "parentId": null,
+  "remark": "",
+  "router": "",
+  "seq": null,
+  "status": 0,
+};
 
 
 export default {
@@ -119,10 +131,7 @@ export default {
       listLoading: true,
       listQuery: {},
       temp: {
-        // 添加/编辑 弹框内容
-        id: undefined,
-        deptName: "",
-        parentId: 0
+        ...TEMP
       },
       dialogFormVisible: false,
       dialogStatus: "",
@@ -145,8 +154,10 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true;
-      listDept(this.listQuery).then(response => {
+      menuTree(this.listQuery).then(response => {
         const { data } = response;
+        console.log(data);
+        
         const list = this.recursiveData(data);
 
         this.tableData = list;
@@ -160,13 +171,13 @@ export default {
         let temp = {
           id: item.id,
           "access": 0,
-          "menuName": item.node.deptName,
-          "menuType": 0,
-          "parentId": 0,
-          "remark": "测试",
-          "router": "/menu",
-          "seq": 1,
-          "status": 0
+          "menuName": item.node.menuName,
+          "menuType": item.node.menuType,
+          "parentId": item.node.parentId,
+          "remark": item.node.remark,
+          "router":item.node.router,
+          "seq": item.node.seq,
+          "status": item.node.status
         };
         if (item.children && item.children.length > 0) {
           temp.children = this.recursiveData(item.children);
@@ -178,9 +189,7 @@ export default {
 
     resetTemp() {
       this.temp = {
-        id: 0,
-        parentId: "",
-        deptName: ""
+        ...TEMP
       };
     },
 
@@ -202,15 +211,15 @@ export default {
       });
     },
 
-    createData() {
+    createData() {  
       this.$refs["dataForm"].validate(valid => {
         if (valid) {
           const addItem = {
-            deptName: this.temp.deptName,
-            id: this.temp.id,
-            parentId: this.temp.parentId.join(",")
+            ...this.temp
           };
-          addDept(addItem).then(() => {
+          addItem.parentId = addItem.parentId.join(',');
+          
+          addMenu(addItem).then(() => {
             this.dialogFormVisible = false;
             this.fetchData();
             this.$notify({
@@ -235,7 +244,9 @@ export default {
       this.$refs["dataForm"].validate(valid => {
         if (valid) {
           let tempData = Object.assign({}, this.temp);
-          updateDept(tempData).then(() => {
+          tempData.parentId = tempData.parentId.join(',');
+          
+          updateMenu(tempData).then(() => {
             this.dialogFormVisible = false;
             this.fetchData();
             this.$notify({
@@ -249,7 +260,8 @@ export default {
       });
     },
     handleDelete(id) {
-      deleteDept(id).then(() => {
+      
+      delMenu({id}).then(() => {
         this.fetchData();
         this.$notify({
           title: "提示",

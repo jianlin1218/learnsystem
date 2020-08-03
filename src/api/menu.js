@@ -10,11 +10,10 @@ export function menuTree() {
     url: '/gsm/v1/sys/menus/listMenusTree',
     method: 'get'
   })
-}
+} 
 
 // 新增菜单
 export function addMenu(data) {
-  
   return request({
     url: '/gsm/v1/sys/menus/addMenu',
     method: 'post',
@@ -23,17 +22,20 @@ export function addMenu(data) {
 }
 
 // 删除菜单
-export function delMenu() {
+export function delMenu(params) {
   return request({
     url: '/gsm/v1/sys/menus/delete',
-    method: 'get'
+    method:'get',
+    params
   })
 }
 
 // 更新菜单
-export function updateMenu() {
-  return request.post({
+export function updateMenu(data) {
+  console.log(data);
+  return request({
     url: '/gsm/v1/sys/menus/updateMenu',
-    params
+    method: 'post',
+    data
   })
 }

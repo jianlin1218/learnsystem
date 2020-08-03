@@ -3,14 +3,10 @@ import { param2Obj } from '../src/utils'
 
 import user from './user'
 import table from './table'
-import exponent from './exponent'
-import policy from './policy'
 
 const mocks = [
   ...user,
   ...table,
-  ...exponent,
-  ...policy,
 ]
 
 // for front mock

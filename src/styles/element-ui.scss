@@ -1,5 +1,6 @@
 // cover some element-ui styles
 
+
 .el-breadcrumb__inner,
 .el-breadcrumb__inner a {
   font-weight: 400 !important;
@@ -48,35 +49,9 @@
   box-sizing: content-box;
 }
 
-.el-card__body {
+.el-card__body{
   padding: 10px;
 }
-
-.el-tag--small {
+.el-tag--small{
   margin: 5px;
-}
-
-.el-loading-mask {
-  background-color: rgba(0, 0, 0, .4);
-}
-
-.el-table [class*=el-table__row--level] .el-table__expand-icon {
-  color: white;
-}
-
-.el-button--primary {
-  // height: 34px;
-  background: linear-gradient(90deg, rgba(0, 117, 255, 1) 0%, rgba(0, 197, 255, 1) 100%);
-  border-radius: 20px;
-  color: white;
-  font-size: 14px;
-  font-weight: bolder;
-}
-
-.el-textarea__inner{
-  background: #063081;
-}
-
-.el-table th{
-  background: #032C79;
 }
